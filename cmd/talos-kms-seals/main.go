@@ -141,10 +141,15 @@ func main() {
 
 	flag.StringVar(&kmsFlags.endpoint, "endpoint", ":4050", "gRPC API endpoint for the KMS")
 	flag.StringVar(&kmsFlags.device, "device", "", "device to work on")
-	flag.UintVar(&kmsFlags.slot, "slot", 0, "slot for KMS token/key")
+	slotRaw := flag.Int("slot", -1, "slot for KMS token/key")
 	flag.StringVar(&kmsFlags.mappedName, "mapped-name", "", "name of the device under /dev/mapper")
 	flag.StringVar(&kmsFlags.onlyOnNode, "only-on-node", "", "if NODE_NAME is not equal to this value, exit immediately")
 	flag.Parse()
+
+	if *slotRaw < 0 {
+		log.Fatalln("slot > 0 is required")
+	}
+	kmsFlags.slot = uint(*slotRaw)
 
 	if os.Getenv("NODE_NAME") != kmsFlags.onlyOnNode {
 		log.Printf("Environment variable NODE_NAME %q does not equal %q, exiting\n", os.Getenv("NODE_NAME"), kmsFlags.onlyOnNode)
@@ -186,9 +191,6 @@ func main() {
 
 	if kmsFlags.device == "" {
 		log.Fatalln("device is required")
-	}
-	if kmsFlags.slot == 0 {
-		log.Fatalln("slot is required")
 	}
 
 	switch operation {
