@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/url"
@@ -68,7 +69,36 @@ func seal(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, de
 	log.Println("device token set, key added to slot", slot)
 }
 
-func unseal(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, mappedName string) {
+func unsealStdin(ctx context.Context, cli kms.KMSServiceClient) {
+	sealed, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatalln("failed to read input", err)
+	}
+
+	resp, err := cli.Unseal(ctx, &kms.Request{NodeUuid: uuid, Data: sealed})
+	if err != nil {
+		log.Fatalln("failed to unseal", err)
+	}
+
+	fmt.Printf("%s", resp.Data)
+}
+
+func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint) {
+	token := &luks.Token[*KMSToken]{}
+
+	if err := luksProv.ReadToken(ctx, device, int(slot), token); err != nil {
+		log.Fatalln("failed to read token", err)
+	}
+
+	resp, err := cli.Unseal(ctx, &kms.Request{NodeUuid: uuid, Data: token.UserData.SealedData})
+	if err != nil {
+		log.Fatalln("failed to unseal", err)
+	}
+
+	fmt.Printf("%s", resp.Data)
+}
+
+func open(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, mappedName string) {
 	token := &luks.Token[*KMSToken]{}
 
 	if err := luksProv.ReadToken(ctx, device, int(slot), token); err != nil {
@@ -122,17 +152,11 @@ func main() {
 	}
 
 	if flag.NArg() != 1 {
-		log.Fatalf("usage: %s <unseal|seal> [flags]\n", os.Args[0])
+		log.Fatalf("usage: %s <open|seal|unseal-device|unseal-bytes> [flags]\n", os.Args[0])
 	}
 
-	if kmsFlags.device == "" {
-		log.Fatalln("device is required")
-	}
 	if kmsFlags.endpoint == "" {
 		log.Fatalln("endpoint is required")
-	}
-	if kmsFlags.slot == 0 {
-		log.Fatalln("slot is required")
 	}
 
 	endpoint, err := url.Parse(kmsFlags.endpoint)
@@ -152,15 +176,29 @@ func main() {
 
 	cli := kms.NewKMSServiceClient(conn)
 
+	operation := flag.Arg(0)
+	if operation == "unseal-bytes" {
+		unsealStdin(ctx, cli)
+		return
+	}
+
 	luks := luks.New(luks.AESXTSPlain64Cipher)
 
-	operation := flag.Arg(0)
+	if kmsFlags.device == "" {
+		log.Fatalln("device is required")
+	}
+	if kmsFlags.slot == 0 {
+		log.Fatalln("slot is required")
+	}
+
 	switch operation {
-	case "unseal":
+	case "open":
 		if kmsFlags.mappedName == "" {
 			log.Fatalln("a name for the device mapper device is required")
 		}
-		unseal(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, kmsFlags.mappedName)
+		open(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, kmsFlags.mappedName)
+	case "unseal-device":
+		unsealDevice(ctx, cli, luks, kmsFlags.device, kmsFlags.slot)
 	case "seal":
 		if kmsFlags.slot == existingKeySlot {
 			log.Fatalln("an existing key is expected at slot", existingKeySlot)
