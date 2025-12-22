@@ -14,9 +14,12 @@ import (
 	"os/signal"
 	"strings"
 
+	"github.com/cosi-project/runtime/pkg/safe"
 	"github.com/siderolabs/go-blockdevice/v2/encryption"
 	"github.com/siderolabs/go-blockdevice/v2/encryption/luks"
 	"github.com/siderolabs/kms-client/api/kms"
+	"github.com/siderolabs/talos/pkg/machinery/client"
+	"github.com/siderolabs/talos/pkg/machinery/resources/hardware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -27,12 +30,12 @@ type KMSToken struct {
 
 const TokenTypeKMS = "sideroKMS"
 
-// TODO get this from Talos. It's not important for my KMS atm
-var uuid = "75717bc6-8bec-42da-ab62-402a27ac6dd2"
+// Fallback if we aren't using Talos API
+var hardcodedUUID = "75717bc6-8bec-42da-ab62-402a27ac6dd2"
 
 const existingKeySlot = 0
 
-func seal(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint) {
+func seal(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, uuid string) {
 	key := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, key); err != nil {
 		log.Fatalln("failed to generate key")
@@ -69,7 +72,7 @@ func seal(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, de
 	log.Println("device token set, key added to slot", slot)
 }
 
-func unsealStdin(ctx context.Context, cli kms.KMSServiceClient) {
+func unsealStdin(ctx context.Context, cli kms.KMSServiceClient, uuid string) {
 	sealed, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatalln("failed to read input", err)
@@ -83,7 +86,7 @@ func unsealStdin(ctx context.Context, cli kms.KMSServiceClient) {
 	fmt.Printf("%s", resp.Data)
 }
 
-func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint) {
+func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, uuid string) {
 	token := &luks.Token[*KMSToken]{}
 
 	if err := luksProv.ReadToken(ctx, device, int(slot), token); err != nil {
@@ -98,7 +101,7 @@ func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.
 	fmt.Printf("%s", resp.Data)
 }
 
-func open(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, mappedName string) {
+func open(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, mappedName string, uuid string) {
 	token := &luks.Token[*KMSToken]{}
 
 	if err := luksProv.ReadToken(ctx, device, int(slot), token); err != nil {
@@ -137,6 +140,7 @@ func main() {
 		slot       uint
 		mappedName string
 		onlyOnNode string
+		inCluster  bool
 	}
 
 	flag.StringVar(&kmsFlags.endpoint, "endpoint", ":4050", "gRPC API endpoint for the KMS")
@@ -144,6 +148,7 @@ func main() {
 	slotRaw := flag.Int("slot", -1, "slot for KMS token/key")
 	flag.StringVar(&kmsFlags.mappedName, "mapped-name", "", "name of the device under /dev/mapper")
 	flag.StringVar(&kmsFlags.onlyOnNode, "only-on-node", "", "if NODE_NAME is not equal to this value, exit immediately")
+	flag.BoolVar(&kmsFlags.inCluster, "in-cluster", false, "use the Talos API to get node information")
 	flag.Parse()
 
 	if *slotRaw < 0 {
@@ -151,8 +156,9 @@ func main() {
 	}
 	kmsFlags.slot = uint(*slotRaw)
 
-	if os.Getenv("NODE_NAME") != kmsFlags.onlyOnNode {
-		log.Printf("Environment variable NODE_NAME %q does not equal %q, exiting\n", os.Getenv("NODE_NAME"), kmsFlags.onlyOnNode)
+	myNode := os.Getenv("NODE_NAME")
+	if kmsFlags.onlyOnNode != "" && myNode != kmsFlags.onlyOnNode {
+		log.Printf("Environment variable NODE_NAME %q does not equal %q, exiting\n", myNode, kmsFlags.onlyOnNode)
 		os.Exit(0)
 	}
 
@@ -181,9 +187,27 @@ func main() {
 
 	cli := kms.NewKMSServiceClient(conn)
 
+	uuid := hardcodedUUID
+	if kmsFlags.inCluster {
+		talosCli, err := client.New(ctx, client.WithDefaultConfig())
+		if err != nil {
+			log.Fatalln("could not create talos client", err)
+		}
+
+		systemInfo, err := safe.ReaderGetByID[*hardware.SystemInformation](client.WithNode(ctx, myNode), talosCli.COSI, "systeminformation")
+		if err != nil {
+			log.Fatalln("could not read SystemInformation", err)
+		}
+
+		uuid = systemInfo.TypedSpec().UUID
+		log.Printf("running in cluster, using UUID: %s\n", uuid)
+	} else {
+		log.Printf("running outside of cluster, using hard-coded UUID: %s\n", uuid)
+	}
+
 	operation := flag.Arg(0)
 	if operation == "unseal-bytes" {
-		unsealStdin(ctx, cli)
+		unsealStdin(ctx, cli, uuid)
 		return
 	}
 
@@ -198,14 +222,14 @@ func main() {
 		if kmsFlags.mappedName == "" {
 			log.Fatalln("a name for the device mapper device is required")
 		}
-		open(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, kmsFlags.mappedName)
+		open(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, kmsFlags.mappedName, uuid)
 	case "unseal-device":
-		unsealDevice(ctx, cli, luks, kmsFlags.device, kmsFlags.slot)
+		unsealDevice(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, uuid)
 	case "seal":
 		if kmsFlags.slot == existingKeySlot {
 			log.Fatalln("an existing key is expected at slot", existingKeySlot)
 		}
-		seal(ctx, cli, luks, kmsFlags.device, kmsFlags.slot)
+		seal(ctx, cli, luks, kmsFlags.device, kmsFlags.slot, uuid)
 	default:
 		log.Fatalln("unknown operation", operation)
 	}
