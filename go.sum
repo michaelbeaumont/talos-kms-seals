@@ -18,8 +18,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/siderolabs/gen v0.8.5 h1:xlWXTynnGD/epaj7uplvKvmAkBH+Fp51bLnw1JC0xME=
 github.com/siderolabs/gen v0.8.5/go.mod h1:CRrktDXQf3yDJI7xKv+cDYhBbKdfd/YE16OpgcHoT9E=
-github.com/siderolabs/go-blockdevice/v2 v2.0.19 h1:V2a7HHzXlgMcZWUxpYp6BdapnwJGDAs/oGy1zkPicNA=
-github.com/siderolabs/go-blockdevice/v2 v2.0.19/go.mod h1:nqUmQxOSex/Sg70x+QyhdE/VtXZ6Q53Z4FoR2RFBzZU=
+github.com/siderolabs/go-blockdevice/v2 v2.0.21 h1:u8R3OdpIk8HgsPyuSCv60h//ZEFEapbnSjq0MhZyjls=
+github.com/siderolabs/go-blockdevice/v2 v2.0.21/go.mod h1:nqUmQxOSex/Sg70x+QyhdE/VtXZ6Q53Z4FoR2RFBzZU=
 github.com/siderolabs/go-cmd v0.1.3 h1:JrgZwqhJQeoec3QRON0LK+fv+0y7d0DyY7zsfkO6ciw=
 github.com/siderolabs/go-cmd v0.1.3/go.mod h1:bg7HY4mRNu4zKebAgUevSwuYNtcvPMJfuhLRkVKHZ0k=
 github.com/siderolabs/kms-client v0.1.0 h1:rCDWzcDDsNlp6zdyLngOuuhchVILn+vwUQy3tk6rQps=

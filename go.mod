@@ -3,7 +3,7 @@ module github.com/michaelbeaumont/talos-kms-seals
 go 1.25.1
 
 require (
-	github.com/siderolabs/go-blockdevice/v2 v2.0.19
+	github.com/siderolabs/go-blockdevice/v2 v2.0.21
 	github.com/siderolabs/kms-client v0.1.0
 	google.golang.org/grpc v1.75.1
 )
