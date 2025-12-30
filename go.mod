@@ -4,7 +4,7 @@ go 1.25.3
 
 require (
 	github.com/cosi-project/runtime v1.12.0
-	github.com/siderolabs/go-blockdevice/v2 v2.0.21
+	github.com/siderolabs/go-blockdevice/v2 v2.0.22
 	github.com/siderolabs/kms-client v0.1.0
 	github.com/siderolabs/talos/pkg/machinery v1.12.0
 	google.golang.org/grpc v1.78.0
@@ -37,12 +37,12 @@ require (
 	github.com/siderolabs/go-pointer v1.0.1 // indirect
 	github.com/siderolabs/protoenc v0.2.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
+	go.uber.org/zap v1.27.1 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.3 // indirect
 	golang.org/x/crypto v0.44.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20251111163417-95abcf5c77ba // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251111163417-95abcf5c77ba // indirect
