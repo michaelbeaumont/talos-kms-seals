@@ -5,7 +5,7 @@ go 1.25.3
 require (
 	github.com/cosi-project/runtime v1.13.0
 	github.com/siderolabs/go-blockdevice/v2 v2.0.23
-	github.com/siderolabs/kms-client v0.1.0
+	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.12.3
 	google.golang.org/grpc v1.78.0
 )
@@ -46,5 +46,5 @@ require (
 	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20251111163417-95abcf5c77ba // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251111163417-95abcf5c77ba // indirect
-	google.golang.org/protobuf v1.36.10 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 )
