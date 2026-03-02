@@ -4,7 +4,7 @@ go 1.25.3
 
 require (
 	github.com/cosi-project/runtime v1.13.0
-	github.com/siderolabs/go-blockdevice/v2 v2.0.23
+	github.com/siderolabs/go-blockdevice/v2 v2.0.25
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.12.3
 	google.golang.org/grpc v1.78.0
@@ -33,7 +33,7 @@ require (
 	github.com/siderolabs/crypto v0.6.4 // indirect
 	github.com/siderolabs/gen v0.8.6 // indirect
 	github.com/siderolabs/go-api-signature v0.3.12 // indirect
-	github.com/siderolabs/go-cmd v0.1.3 // indirect
+	github.com/siderolabs/go-cmd v0.2.0 // indirect
 	github.com/siderolabs/go-pointer v1.0.1 // indirect
 	github.com/siderolabs/protoenc v0.2.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
