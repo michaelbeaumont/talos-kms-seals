@@ -6,7 +6,7 @@ require (
 	github.com/cosi-project/runtime v1.14.0
 	github.com/siderolabs/go-blockdevice/v2 v2.0.25
 	github.com/siderolabs/kms-client v0.2.0
-	github.com/siderolabs/talos/pkg/machinery v1.12.4
+	github.com/siderolabs/talos/pkg/machinery v1.12.5
 	google.golang.org/grpc v1.79.1
 )
 
@@ -40,7 +40,7 @@ require (
 	go.uber.org/zap v1.27.1 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.4 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
