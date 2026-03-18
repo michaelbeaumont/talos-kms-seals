@@ -83,7 +83,7 @@ func unsealStdin(ctx context.Context, cli kms.KMSServiceClient, uuid string) {
 		log.Fatalln("failed to unseal", err)
 	}
 
-	fmt.Printf("%s", resp.Data)
+	fmt.Println(base64.StdEncoding.EncodeToString(resp.Data))
 }
 
 func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, uuid string) {
@@ -98,7 +98,7 @@ func unsealDevice(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.
 		log.Fatalln("failed to unseal", err)
 	}
 
-	fmt.Printf("%s", resp.Data)
+	fmt.Println(base64.StdEncoding.EncodeToString(resp.Data))
 }
 
 func open(ctx context.Context, cli kms.KMSServiceClient, luksProv *luks.LUKS, device string, slot uint, mappedName string, uuid string) {
