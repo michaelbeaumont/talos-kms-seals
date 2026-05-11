@@ -22,6 +22,7 @@ import (
 	"github.com/siderolabs/talos/pkg/machinery/resources/hardware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type KMSToken struct {
@@ -178,6 +179,8 @@ func main() {
 	var options []grpc.DialOption
 	if endpoint.Scheme == "grpcs" {
 		options = append(options, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	} else {
+		options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 	conn, err := grpc.NewClient(endpoint.Host, options...)
 	if err != nil {
