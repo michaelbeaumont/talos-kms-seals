@@ -3,7 +3,7 @@ module github.com/michaelbeaumont/talos-kms-seals
 go 1.25.6
 
 require (
-	github.com/cosi-project/runtime v1.14.1
+	github.com/cosi-project/runtime v1.15.1
 	github.com/siderolabs/go-blockdevice/v2 v2.0.28
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.12.6
