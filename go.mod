@@ -1,9 +1,9 @@
 module github.com/michaelbeaumont/talos-kms-seals
 
-go 1.26.1
+go 1.26.2
 
 require (
-	github.com/cosi-project/runtime v1.14.1
+	github.com/cosi-project/runtime v1.16.1
 	github.com/siderolabs/go-blockdevice/v2 v2.0.31
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.13.4
@@ -22,7 +22,7 @@ require (
 	github.com/containernetworking/cni v1.3.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gertd/go-pluralize v0.2.1 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.29.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/opencontainers/runtime-spec v1.3.0 // indirect
@@ -38,7 +38,7 @@ require (
 	github.com/siderolabs/go-pointer v1.0.1 // indirect
 	github.com/siderolabs/protoenc v0.2.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.1 // indirect
+	go.uber.org/zap v1.28.0 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.4 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
