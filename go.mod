@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/cosi-project/runtime v1.14.1
-	github.com/siderolabs/go-blockdevice/v2 v2.0.28
+	github.com/siderolabs/go-blockdevice/v2 v2.0.31
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.13.4
 	google.golang.org/grpc v1.81.1
@@ -42,7 +42,7 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0-rc.4 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260504160031-60b97b32f348 // indirect
