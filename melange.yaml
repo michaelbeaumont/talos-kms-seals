@@ -1,0 +1,23 @@
+package:
+  name: talos-kms-seals
+  version: 0.0.1
+  epoch: 0
+  target-architecture:
+    - x86_64
+  copyright:
+    - license: MIT
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/v3.24/main
+      - https://dl-cdn.alpinelinux.org/alpine/v3.24/community
+    packages:
+      - bash
+      - ca-certificates-bundle
+      - go=1.26.3-r0
+
+pipeline:
+  - name: Build
+    runs: |
+      CGO_ENABLED=0 go build -o "${{ targets.destdir }}/usr/bin/talos-kms-seals" ./cmd/talos-kms-seals

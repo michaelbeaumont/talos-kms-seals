@@ -1,0 +1,22 @@
+contents:
+  keyring:
+    - ./melange.rsa.pub
+  repositories:
+    - https://dl-cdn.alpinelinux.org/alpine/v3.24/main
+    - "@local packages"
+  packages:
+    - alpine-base=3.24.1-r0
+    - cryptsetup=2.8.6-r0
+    - talos-kms-seals@local
+
+accounts:
+  run-as: 0
+
+entrypoint:
+  command: /usr/bin/talos-kms-seals
+
+annotations:
+  org.opencontainers.image.source: "https://github.com/michaelbeaumont/talos-kms-seals"
+
+archs:
+  - x86_64
