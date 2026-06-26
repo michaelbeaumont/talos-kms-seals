@@ -1,0 +1,68 @@
+name: Publish signed and attested container image
+
+on:
+  workflow_dispatch: {}
+
+env:
+  registry: ghcr.io/${{ github.actor }}
+  image: talos-kms-seals
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v4.1.2
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+      - name: Build APK package
+        uses: chainguard-dev/actions/melange-build@main
+        with:
+          sign-with-temporary-key: true
+          config: "melange.yaml"
+          repository-path: "packages"
+      - name: Get version
+        id: get-version
+        run: |
+          package_version=$(yq '.contents.packages[-1] | capture("=(?P<ver>[^-r@]*)").ver' apko.yaml)
+          echo "version=${package_version:-latest}" >> "$GITHUB_OUTPUT"
+      - name: Publish image
+        uses: chainguard-images/actions/apko-publish@main
+        id: publish
+        with:
+          config: apko.yaml
+          tag: ${{ env.registry }}/${{ env.image }}:${{ steps.get-version.outputs.version }}
+          sbom-path: .
+      - name: Sign the image
+        run: |
+          cosign sign --yes ${{ steps.publish.outputs.digest }}
+      - name: Normalize outputs
+        id: normalized
+        run: |
+          RAW="${{ steps.publish.outputs.digest }}"
+          echo "name=${RAW%@*}" >> "$GITHUB_OUTPUT"
+          echo "digest=${RAW#*@}" >> "$GITHUB_OUTPUT"
+      - name: Attest provenance
+        uses: actions/attest@v4
+        with:
+          subject-name: ${{ env.registry }}/${{ env.image }}
+          subject-digest: ${{ steps.normalized.outputs.digest }}
+          push-to-registry: true
+      - name: Attest SBOM
+        uses: actions/attest@v4
+        with:
+          subject-name: ${{ env.registry }}/${{ env.image }}
+          subject-digest: ${{ steps.normalized.outputs.digest }}
+          sbom-path: sbom-index.spdx.json
+          push-to-registry: true
