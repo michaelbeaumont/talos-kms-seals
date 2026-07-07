@@ -7,7 +7,7 @@ require (
 	github.com/siderolabs/go-blockdevice/v2 v2.0.31
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.13.5
-	google.golang.org/grpc v1.81.1
+	google.golang.org/grpc v1.82.0
 )
 
 require (
