@@ -1,12 +1,12 @@
 module github.com/michaelbeaumont/talos-kms-seals
 
-go 1.26.2
+go 1.26.5
 
 require (
 	github.com/cosi-project/runtime v1.16.2
 	github.com/siderolabs/go-blockdevice/v2 v2.0.32
 	github.com/siderolabs/kms-client v0.2.0
-	github.com/siderolabs/talos/pkg/machinery v1.13.5
+	github.com/siderolabs/talos/pkg/machinery v1.13.6
 	google.golang.org/grpc v1.82.1
 )
 
@@ -32,7 +32,7 @@ require (
 	github.com/planetscale/vtprotobuf v0.6.1-0.20250313105119-ba97887b0a25 // indirect
 	github.com/sasha-s/go-deadlock v0.3.5 // indirect
 	github.com/siderolabs/crypto v0.6.5 // indirect
-	github.com/siderolabs/gen v0.8.6 // indirect
+	github.com/siderolabs/gen v0.8.7 // indirect
 	github.com/siderolabs/go-api-signature v0.3.12 // indirect
 	github.com/siderolabs/go-cmd v0.2.0 // indirect
 	github.com/siderolabs/go-pointer v1.0.1 // indirect
