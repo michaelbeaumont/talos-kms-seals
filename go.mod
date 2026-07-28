@@ -6,7 +6,7 @@ require (
 	github.com/cosi-project/runtime v1.16.2
 	github.com/siderolabs/go-blockdevice/v2 v2.0.32
 	github.com/siderolabs/kms-client v0.2.0
-	github.com/siderolabs/talos/pkg/machinery v1.13.6
+	github.com/siderolabs/talos/pkg/machinery v1.13.7
 	google.golang.org/grpc v1.82.1
 )
 
