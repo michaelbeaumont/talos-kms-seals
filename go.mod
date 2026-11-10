@@ -4,7 +4,7 @@ go 1.26.5
 
 require (
 	github.com/cosi-project/runtime v1.16.3
-	github.com/siderolabs/go-blockdevice/v2 v2.0.32
+	github.com/siderolabs/go-blockdevice/v2 v2.0.37
 	github.com/siderolabs/kms-client v0.2.0
 	github.com/siderolabs/talos/pkg/machinery v1.13.6
 	google.golang.org/grpc v1.84.0
@@ -32,9 +32,9 @@ require (
 	github.com/planetscale/vtprotobuf v0.6.1-0.20250313105119-ba97887b0a25 // indirect
 	github.com/sasha-s/go-deadlock v0.3.5 // indirect
 	github.com/siderolabs/crypto v0.6.5 // indirect
-	github.com/siderolabs/gen v0.8.7 // indirect
+	github.com/siderolabs/gen v0.8.8 // indirect
 	github.com/siderolabs/go-api-signature v0.3.12 // indirect
-	github.com/siderolabs/go-cmd v0.2.0 // indirect
+	github.com/siderolabs/go-cmd v0.2.1 // indirect
 	github.com/siderolabs/go-pointer v1.0.1 // indirect
 	github.com/siderolabs/protoenc v0.2.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
@@ -42,8 +42,8 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0-rc.6 // indirect
 	golang.org/x/crypto v0.55.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260803160001-6ac0973c030d // indirect
